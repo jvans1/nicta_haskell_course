@@ -30,10 +30,7 @@ import qualified Numeric as N
 -- BEGIN Helper functions and data types
 
 -- The custom list type
-data List t =
-  Nil
-  | t :. List t
-  deriving (Eq, Ord)
+data List t = Nil | t :. List t deriving (Eq, Ord)
 
 -- Right-associative
 infixr 5 :.
@@ -42,11 +39,9 @@ instance Show t => Show (List t) where
   show = show . foldRight (:) []
 
 -- The list of integers from zero to infinity.
-infinity ::
-  List Integer
-infinity =
-  let inf x = x :. inf (x+1)
-  in inf 0
+infinity :: List Integer
+infinity = let inf x = x :. inf (x+1)
+            in inf 0
 
 -- functions over List that you may consider using
 foldRight :: (a -> b -> b) -> b -> List a -> b
@@ -99,9 +94,7 @@ product =
 -- 10
 --
 -- prop> foldLeft (-) (sum x) x == 0
-sum ::
-  List Int
-  -> Int
+sum :: List Int -> Int
 sum =
   error "todo"
 
@@ -161,12 +154,11 @@ filter =
 -- prop> (x ++ y) ++ z == x ++ (y ++ z)
 --
 -- prop> x ++ Nil == x
-(++) ::
-  List a
-  -> List a
-  -> List a
-(++) =
-  error "todo"
+(++) :: List a -> List a -> List a
+(++) Nil        xy       = xy
+(++) xs         Nil      = xs
+(++) (a :. xs) xy = a :. xs ++ xy
+
 
 infixr 5 ++
 

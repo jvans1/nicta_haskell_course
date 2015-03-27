@@ -28,8 +28,7 @@ import qualified Prelude as P
 -- * The law of right identity
 --   `∀x. x <*> pure ≅ x`
 class Apply f => Applicative f where
-  pure ::
-    a -> f a
+  pure :: a -> f a
 
 -- | Witness that all things with (<*>) and pure also have (<$>).
 --
