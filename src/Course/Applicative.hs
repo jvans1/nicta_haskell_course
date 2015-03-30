@@ -40,53 +40,37 @@ class Apply f => Applicative f where
 --
 -- >>> (+1) <$> (1 :. 2 :. 3 :. Nil)
 -- [2,3,4]
-(<$>) ::
-  Applicative f =>
-  (a -> b)
-  -> f a
-  -> f b
-(<$>) =
-  error "todo"
+(<$>) :: Applicative f => (a -> b) -> f a -> f b
+(<$>) = error "todo"
 
 -- | Insert into Id.
 --
 -- prop> pure x == Id x
 instance Applicative Id where
-  pure ::
-    a
-    -> Id a
-  pure =
-    error "todo"
+  pure :: a -> Id a
+  pure = Id 
 
 -- | Insert into a List.
 --
 -- prop> pure x == x :. Nil
 instance Applicative List where
-  pure ::
-    a
-    -> List a
-  pure =
-    error "todo"
+  pure :: a -> List a
+  pure x = x :. Nil
 
 -- | Insert into an Optional.
 --
 -- prop> pure x == Full x
 instance Applicative Optional where
-  pure ::
-    a
-    -> Optional a
-  pure =
-    error "todo"
+  pure :: a -> Optional a
+  pure = Full
 
 -- | Insert into a constant function.
 --
 -- prop> pure x y == x
+-- TODO: Course/Applicative.hs 
 instance Applicative ((->) t) where
-  pure ::
-    a
-    -> ((->) t a)
-  pure =
-    error "todo"
+  pure :: a -> ((->) t a)
+  pure = error "todo"
 
 -- | Sequences a list of structures to a structure of list.
 --
@@ -104,12 +88,8 @@ instance Applicative ((->) t) where
 --
 -- >>> sequence ((*10) :. (+2) :. Nil) 6
 -- [60,8]
-sequence ::
-  Applicative f =>
-  List (f a)
-  -> f (List a)
-sequence =
-  error "todo"
+sequence :: Applicative f => List (f a) -> f (List a)
+sequence = error "todo" 
 
 -- | Replicate an effect a given number of times.
 --
@@ -127,13 +107,8 @@ sequence =
 --
 -- >>> replicateA 3 ['a', 'b', 'c']
 -- ["aaa","aab","aac","aba","abb","abc","aca","acb","acc","baa","bab","bac","bba","bbb","bbc","bca","bcb","bcc","caa","cab","cac","cba","cbb","cbc","cca","ccb","ccc"]
-replicateA ::
-  Applicative f =>
-  Int
-  -> f a
-  -> f (List a)
-replicateA =
-  error "todo"
+replicateA :: Applicative f => Int -> f a -> f (List a)
+replicateA = error "todo"
 
 -- | Filter a list with a predicate that produces an effect.
 --

@@ -95,8 +95,8 @@ product =
 --
 -- prop> foldLeft (-) (sum x) x == 0
 sum :: List Int -> Int
-sum =
-  error "todo"
+sum Nil = 0
+sum (x :. xs) = x + sum xs
 
 -- | Return the length of the list.
 --
