@@ -70,7 +70,7 @@ instance Applicative Optional where
 instance Applicative ((->) t) where
   pure :: a -> ((->) t a)
   -- pure :: a -> (t -> a)
-  pure x = (\b -> x)
+  pure x _ =  x
 
 -- | Sequences a list of structures to a structure of list.
 --
@@ -139,13 +139,14 @@ replicateA i fa = sequence $ genList i fa
 -- >>> filtering (const $ True :. True :.  Nil) (1 :. 2 :. 3 :. Nil)
 -- [[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
 --
-filtering ::
-  Applicative f =>
-  (a -> f Bool)
-  -> List a
-  -> f (List a)
-filtering =
-  error "filtering"
+filtering :: Applicative f => (a -> f Bool) -> List a -> f (List a)
+filtering _ Nil           = pure Nil
+filtering bool (x :. Nil) = (makeList x) <$> bool x
+filtering bool (x :. xs)  = (++) <$> filtering bool (x :. Nil) <*> filtering bool xs
+
+makeList :: a -> Bool -> List a
+makeList a True = a :. Nil 
+makeList _ False = Nil 
 
 -----------------------
 -- SUPPORT LIBRARIES --
