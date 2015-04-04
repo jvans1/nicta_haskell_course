@@ -5,6 +5,7 @@
 module Course.Functor where
 
 import Course.Core
+
 import Course.Id
 import Course.Optional
 import Course.List
@@ -69,9 +70,16 @@ instance Functor Optional where
 --
 -- >>> ((+1) <$> (*2)) 8
 -- 17
+-- (+2)
+-- r -> a
+--
+-- (->) r a
+--
+--TODO: Understand this
 instance Functor ((->) t) where
   (<$>) :: (a -> b) -> ((->) t a) -> ((->) t b)
-  (<$>) f fn = f . fn
+  -- (<$>) :: (a -> b) -> (t -> a) -> (t -> b)
+  (<$>) = (.) 
 
 -- | Anonymous map. Maps a constant value on a functor.
 --

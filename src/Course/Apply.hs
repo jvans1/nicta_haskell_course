@@ -78,10 +78,10 @@ instance Apply Optional where
 -- >>> ((*) <*> (+2)) 3
 -- 15
 --
--- TODO: Course/Apply.hs:81
 instance Apply ((->) t) where
   (<*>) :: ((->) t (a -> b)) -> ((->) t a) -> ((->) t b)
-  (<*>) fab fn = error "ass"
+  -- (<*>) :: (t -> (a -> b)) -> (t -> a) -> (t -> b)
+  (<*>) fab fn = (\x -> fab x $ fn x )
 
 -- | Apply a binary function in the environment.
 --
