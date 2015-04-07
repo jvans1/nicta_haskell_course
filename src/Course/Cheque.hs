@@ -30,13 +30,10 @@ import Course.Bind
 -- >>> :set -XOverloadedStrings
 
 -- The representation of the grouping of each exponent of one thousand. ["thousand", "million", ...]
-illion ::
-  List Chars
+illion :: List Chars
 illion =
-  let preillion ::
-        List (Chars -> Chars)
-      preillion =
-        listh [
+  let preillion :: List (Chars -> Chars)
+      preillion = listh [
           const ""
         , const "un"
         , const "do"
@@ -48,10 +45,8 @@ illion =
         , const "octo"
         , \q -> if "n" `isPrefixOf` q then "novem" else "noven"
         ]
-      postillion ::
-        List Chars
-      postillion =
-        listh [
+      postillion :: List Chars
+      postillion = listh [
           "vigintillion"
         , "trigintillion"
         , "quadragintillion"
@@ -176,76 +171,36 @@ illion =
      ] ++ lift2 ((++) =<<) preillion postillion
 
 -- A data type representing the digits zero to nine.
-data Digit =
-  Zero
-  | One
-  | Two
-  | Three
-  | Four
-  | Five
-  | Six
-  | Seven
-  | Eight
-  | Nine
-  deriving (Eq, Enum, Bounded)
+data Digit = Zero | One | Two | Three | Four | Five | Six | Seven | Eight | Nine deriving (Eq, Enum, Bounded)
 
-showDigit ::
-  Digit
-  -> Chars
-showDigit Zero =
-  "zero"
-showDigit One =
-  "one"
-showDigit Two =
-  "two"
-showDigit Three =
-  "three"
-showDigit Four =
-  "four"
-showDigit Five =
-  "five"
-showDigit Six =
-  "six"
-showDigit Seven =
-  "seven"
-showDigit Eight =
-  "eight"
-showDigit Nine =
-  "nine"
+showDigit :: Digit -> Chars
+showDigit Zero = "zero"
+showDigit One = "one"
+showDigit Two = "two"
+showDigit Three = "three"
+showDigit Four = "four"
+showDigit Five = "five"
+showDigit Six = "six"
+showDigit Seven = "seven"
+showDigit Eight = "eight"
+showDigit Nine = "nine"
 
 -- A data type representing one, two or three digits, which may be useful for grouping.
-data Digit3 =
-  D1 Digit
-  | D2 Digit Digit
-  | D3 Digit Digit Digit
-  deriving Eq
+data Digit3 = D1 Digit | D2 Digit Digit | D3 Digit Digit Digit deriving Eq
 
 -- Possibly convert a character to a digit.
-fromChar ::
-  Char
-  -> Optional Digit
-fromChar '0' =
-  Full Zero
-fromChar '1' =
-  Full One
-fromChar '2' =
-  Full Two
-fromChar '3' =
-  Full Three
-fromChar '4' =
-  Full Four
-fromChar '5' =
-  Full Five
-fromChar '6' =
-  Full Six
-fromChar '7' =
-  Full Seven
-fromChar '8' =
-  Full Eight
-fromChar '9' =
-  Full Nine
-fromChar _ =
-  Empty
+fromChar :: Char -> Optional Digit
+fromChar '0' = Full Zero
+fromChar '1' = Full One
+fromChar '2' = Full Two
+fromChar '3' = Full Three
+fromChar '4' = Full Four
+fromChar '5' = Full Five
+fromChar '6' = Full Six
+fromChar '7' = Full Seven
+fromChar '8' = Full Eight
+fromChar '9' = Full Nine
+fromChar _ = Empty
 
 -- | Take a numeric value and produce its English output.
 --
