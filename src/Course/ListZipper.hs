@@ -143,7 +143,7 @@ withFocus f (ListZipper xs x xxs) = ListZipper xs (f x) xxs
 -- >>> setFocus 1 (zipper [1,0] 2 [3,4])
 -- [1,0] >1< [3,4]
 setFocus :: a -> ListZipper a -> ListZipper a
-setFocus v (ListZipper xs x xxs) = ListZipper xs v xxs
+setFocus v (ListZipper xs _ xxs) = ListZipper xs v xxs
 
 -- A flipped infix alias for `setFocus`. This allows:
 --

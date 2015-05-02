@@ -23,73 +23,45 @@ import Data.Char
 
 type Input = Chars
 
-data ParseError =
-  UnexpectedEof
-  | ExpectedEof Input
-  | UnexpectedChar Char
-  | Failed
-  deriving Eq
+data ParseError = UnexpectedEof | ExpectedEof Input | UnexpectedChar Char | Failed deriving Eq
 
 
 instance Show ParseError where
-  show UnexpectedEof =
-    "Unexpected end of stream"
-  show (ExpectedEof i) =
-    stringconcat ["Expected end of stream, but got >", show i, "<"]
-  show (UnexpectedChar c) =
-    stringconcat ["Unexpected character: ", show [c]]
-  show Failed =
-    "Parse failed"
+  show UnexpectedEof = "Unexpected end of stream"
+  show (ExpectedEof i) = stringconcat ["Expected end of stream, but got >", show i, "<"]
+  show (UnexpectedChar c) = stringconcat ["Unexpected character: ", show [c]]
+  show Failed = "Parse failed"
 
-data ParseResult a =
-  ErrorResult ParseError
-  | Result Input a
-  deriving Eq
+data ParseResult a = ErrorResult ParseError | Result Input a deriving Eq
 
 instance Show a => Show (ParseResult a) where
-  show (ErrorResult e) =
-    show e
-  show (Result i a) =
-    stringconcat ["Result >", hlist i, "< ", show a]
+  show (ErrorResult e) = show e
+  show (Result i a) = stringconcat ["Result >", hlist i, "< ", show a]
 
 -- Function to determine is a parse result is an error.
-isErrorResult ::
-  ParseResult a
-  -> Bool
-isErrorResult (ErrorResult _) =
-  True
-isErrorResult (Result _ _) =
-  False
+isErrorResult :: ParseResult a -> Bool
+isErrorResult (ErrorResult _) = True
+isErrorResult (Result _ _) = False
 
-data Parser a = P {
-  parse :: Input -> ParseResult a
-}
+data Parser a = P { parse :: Input -> ParseResult a }
 
 -- | Produces a parser that always fails with @UnexpectedChar@ using the given character.
-unexpectedCharParser ::
-  Char
-  -> Parser a
-unexpectedCharParser c =
-  P (\_ -> ErrorResult (UnexpectedChar c))
+unexpectedCharParser :: Char -> Parser a
+unexpectedCharParser c = P (\_ -> ErrorResult (UnexpectedChar c))
 
 -- | Return a parser that always succeeds with the given value and consumes no input.
 --
 -- >>> parse (valueParser 3) "abc"
 -- Result >abc< 3
-valueParser ::
-  a
-  -> Parser a
-valueParser =
-  error "todo"
+valueParser :: a -> Parser a
+valueParser a = P (\v -> Result v a)
 
 -- | Return a parser that always fails with the given error.
 --
 -- >>> isErrorResult (parse failed "abc")
 -- True
-failed ::
-  Parser a
-failed =
-  error "todo"
+failed :: Parser a
+failed = P (\_ -> ErrorResult Failed )
 
 -- | Return a parser that succeeds with a character off the input or fails with an error if the input is empty.
 --
@@ -98,11 +70,12 @@ failed =
 --
 -- >>> isErrorResult (parse character "")
 -- True
-character ::
-  Parser Char
-character =
-  error "todo"
-
+character :: Parser Char
+character = P $ parseFunc
+  where 
+    parseFunc :: Input -> ParseResult Char 
+    parseFunc Nil = ErrorResult Failed
+    parseFunc (x :. xs) = Result xs x
 -- | Return a parser that maps any succeeding result with the given function.
 --
 -- >>> parse (mapParser succ character) "amz"

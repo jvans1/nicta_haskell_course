@@ -115,9 +115,9 @@ replicateA :: Applicative f => Int -> f a -> f (List a)
 replicateA i fa = sequence $ genList i fa
   where 
     genList :: Applicative f => Int -> f a -> List (f a)
-    genList i fa
-      | i == 1 = fa :. Nil
-      | otherwise = fa :. (genList (i - 1) fa)
+    genList x faa
+      | x == 1 = faa :. Nil
+      | otherwise = faa :. (genList (x - 1) faa)
 
 -- | Filter a list with a predicate that produces an effect.
 --
