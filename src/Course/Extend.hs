@@ -58,7 +58,7 @@ instance Extend List where
 -- Empty
 instance Extend Optional where
   (<<=) :: (Optional a -> b) -> Optional a -> Optional b
-  (<<=) = error "todo"
+  (<<=) = error "todo21"
 
 -- | Duplicate the functor using extension.
 --
@@ -74,4 +74,4 @@ instance Extend Optional where
 -- >>> cojoin Empty
 -- Empty
 cojoin :: Extend f => f a -> f (f a)
-cojoin = error "todo"
+cojoin = error "todo22"

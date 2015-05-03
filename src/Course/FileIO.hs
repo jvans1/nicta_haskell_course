@@ -63,7 +63,7 @@ the contents of c
 main ::
   IO ()
 main =
-  error "todo"
+  error "todo24"
 
 type FilePath =
   Chars
@@ -73,30 +73,30 @@ run ::
   Chars
   -> IO ()
 run =
-  error "todo"
+  error "todo25"
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
 getFiles =
-  error "todo"
+  error "todo26"
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
 getFile =
-  error "todo"
+  error "todo27"
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
 printFiles =
-  error "todo"
+  error "todo28"
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
 printFile =
-  error "todo"
+  error "todo29"
 

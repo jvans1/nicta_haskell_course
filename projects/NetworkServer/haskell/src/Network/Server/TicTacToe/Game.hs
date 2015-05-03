@@ -196,14 +196,14 @@ process ::
   Command
   -> Game ()
 process =
-  error "todo"
+  error "todo3"
 
 game ::
   Game x -- client accepted (post)
   -> (String -> Game w) -- read line from client
   -> IO a
 game =
-  error "todo"
+  error "todo4"
 
 play ::
   IO a

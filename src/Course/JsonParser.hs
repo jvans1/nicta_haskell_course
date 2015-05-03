@@ -96,7 +96,7 @@ toSpecialCharacter c =
 -- >>> isErrorResult (parse jsonString "\"\\abc\"def")
 -- True
 jsonString :: Parser Chars
-jsonString = error "todo"
+jsonString = error "todo33"
 
 -- | Parse a JSON rational.
 --
@@ -123,7 +123,7 @@ jsonString = error "todo"
 -- >>> isErrorResult (parse jsonNumber "abc")
 -- True
 jsonNumber :: Parser Rational
-jsonNumber = error "todo"
+jsonNumber = error "todo34"
 
 -- | Parse a JSON true literal.
 --
@@ -135,7 +135,7 @@ jsonNumber = error "todo"
 -- >>> isErrorResult (parse jsonTrue "TRUE")
 -- True
 jsonTrue :: Parser Chars
-jsonTrue = error "todo"
+jsonTrue = error "todo35"
 
 -- | Parse a JSON false literal.
 --
@@ -147,7 +147,7 @@ jsonTrue = error "todo"
 -- >>> isErrorResult (parse jsonFalse "FALSE")
 -- True
 jsonFalse :: Parser Chars
-jsonFalse = error "todo"
+jsonFalse = error "todo36"
 
 -- | Parse a JSON null literal.
 --
@@ -159,7 +159,7 @@ jsonFalse = error "todo"
 -- >>> isErrorResult (parse jsonNull "NULL")
 -- True
 jsonNull :: Parser Chars
-jsonNull = error "todo"
+jsonNull = error "todo37"
 
 -- | Parse a JSON array.
 --
@@ -180,7 +180,7 @@ jsonNull = error "todo"
 -- >>> parse jsonArray "[true, \"abc\", [false]]"
 -- Result >< [JsonTrue,JsonString "abc",JsonArray [JsonFalse]]
 jsonArray :: Parser (List JsonValue)
-jsonArray = error "todo"
+jsonArray = error "todo38"
 
 -- | Parse a JSON object.
 --
@@ -198,7 +198,7 @@ jsonArray = error "todo"
 -- >>> parse jsonObject "{ \"key1\" : true , \"key2\" : false } xyz"
 -- Result >xyz< [("key1",JsonTrue),("key2",JsonFalse)]
 jsonObject :: Parser Assoc
-jsonObject = error "todo"
+jsonObject = error "todo39"
 
 -- | Parse a JSON value.
 --
@@ -215,7 +215,7 @@ jsonObject = error "todo"
 jsonValue ::
   Parser JsonValue
 jsonValue =
-   error "todo"
+   error "todo40"
 
 -- | Read a file into a JSON value.
 --
@@ -224,4 +224,4 @@ readJsonValue ::
   Filename
   -> IO (ParseResult JsonValue)
 readJsonValue =
-  error "todo"
+  error "todo41"

@@ -15,7 +15,7 @@ fastAnagrams ::
   -> Filename
   -> IO (List Chars)
 fastAnagrams =
-  error "todo"
+  error "todo23"
 
 newtype NoCaseString =
   NoCaseString {

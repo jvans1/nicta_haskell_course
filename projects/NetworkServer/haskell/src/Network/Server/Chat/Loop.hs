@@ -82,7 +82,7 @@ perClient ::
   -> (String -> IOLoop v a) -- read line from client
   -> IOLoop v ()
 perClient =
-  error "todo"
+  error "todo2"
 
 loop ::
   IO w -- server initialise

@@ -84,7 +84,7 @@ data Op =
 convertInteractive ::
   IO ()
 convertInteractive =
-  error "todo"
+  error "todo30"
 
 -- |
 --
@@ -112,7 +112,7 @@ convertInteractive =
 reverseInteractive ::
   IO ()
 reverseInteractive =
-  error "todo"
+  error "todo31"
 
 -- |
 --
@@ -138,7 +138,7 @@ reverseInteractive =
 encodeInteractive ::
   IO ()
 encodeInteractive =
-  error "todo"
+  error "todo32"
 
 interactive ::
   IO ()

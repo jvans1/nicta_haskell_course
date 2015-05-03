@@ -274,7 +274,7 @@ lengthGT4 xs = lengthCountMoreThan4 0 xs
 -- prop> let types = x :: Int in reverse (x :. Nil) == x :. Nil
 -- TODO: Prob a more efficient solution for this
 reverse :: List a -> List a
-reverse = error "todo"
+reverse = error "todo42"
 {- reverse Nil = Nil -}
 {- reverse xs@(x :. Nil) = xs -}
 {- reverse (x :. (y :. Nil)) = y :. (x :. Nil) -}

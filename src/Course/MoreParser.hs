@@ -40,7 +40,7 @@ P p <.> i =
 spaces ::
   Parser Chars
 spaces =
-  error "todo"
+  error "todo74"
 
 -- | Write a function that applies the given parser, then parses 0 or more spaces,
 -- then produces the result of the original parser.
@@ -56,7 +56,7 @@ tok ::
   Parser a
   -> Parser a
 tok =
-  error "todo"
+  error "todo75"
 
 -- | Write a function that parses the given char followed by 0 or more spaces.
 --
@@ -65,7 +65,7 @@ charTok ::
   Char
   -> Parser Char
 charTok =
-  error "todo"
+  error "todo76"
 
 -- | Write a parser that parses a comma ',' followed by 0 or more spaces.
 --
@@ -73,7 +73,7 @@ charTok =
 commaTok ::
   Parser Char
 commaTok =
-  error "todo"
+  error "todo77"
 
 -- | Write a parser that parses either a double-quote or a single-quote.
 --
@@ -90,7 +90,7 @@ commaTok =
 quote ::
   Parser Char
 quote =
-  error "todo"
+  error "todo78"
 
 -- | Write a function that parses the given string (fails otherwise).
 --
@@ -105,7 +105,7 @@ string ::
   Chars
   -> Parser Chars
 string =
-  error "todo"
+  error "todo79"
 
 -- | Write a function that parsers the given string, followed by 0 or more spaces.
 --
@@ -120,7 +120,7 @@ stringTok ::
   Chars
   -> Parser Chars
 stringTok =
-  error "todo"
+  error "todo80"
 
 -- | Write a function that tries the given parser, otherwise succeeds by producing the given value.
 --
@@ -136,7 +136,7 @@ option ::
   -> Parser a
   -> Parser a
 option =
-  error "todo"
+  error "todo81"
 
 -- | Write a parser that parses 1 or more digits.
 --
@@ -150,7 +150,7 @@ option =
 digits1 ::
   Parser Chars
 digits1 =
-  error "todo"
+  error "todo82"
 
 -- | Write a function that parses one of the characters in the given string.
 --
@@ -165,7 +165,7 @@ oneof ::
   Chars
   -> Parser Char
 oneof =
-  error "todo"
+  error "todo83"
 
 -- | Write a function that parses any character, but fails if it is in the given string.
 --
@@ -180,7 +180,7 @@ noneof ::
   Chars
   -> Parser Char
 noneof =
-  error "todo"
+  error "todo84"
 
 -- | Write a function that applies the first parser, runs the third parser keeping the result,
 -- then runs the second parser and produces the obtained result.
@@ -204,7 +204,7 @@ between ::
   -> Parser a
   -> Parser a
 between =
-  error "todo"
+  error "todo85"
 
 -- | Write a function that applies the given parser in between the two given characters.
 --
@@ -227,7 +227,7 @@ betweenCharTok ::
   -> Parser a
   -> Parser a
 betweenCharTok =
-  error "todo"
+  error "todo86"
 
 -- | Write a function that parses 4 hex digits and return the character value.
 --
@@ -247,7 +247,7 @@ betweenCharTok =
 hex ::
   Parser Char
 hex =
-  error "todo"
+  error "todo87"
 
 -- | Write a function that parses the character 'u' followed by 4 hex digits and return the character value.
 --
@@ -270,7 +270,7 @@ hex =
 hexu ::
   Parser Char
 hexu =
-  error "todo"
+  error "todo88"
 
 -- | Write a function that produces a non-empty list of values coming off the given parser (which must succeed at least once),
 -- separated by the second given parser.
@@ -293,7 +293,7 @@ sepby1 ::
   -> Parser s
   -> Parser (List a)
 sepby1 =
-  error "todo"
+  error "todo89"
 
 -- | Write a function that produces a list of values coming off the given parser,
 -- separated by the second given parser.
@@ -316,7 +316,7 @@ sepby ::
   -> Parser s
   -> Parser (List a)
 sepby =
-  error "todo"
+  error "todo90"
 
 -- | Write a parser that asserts that there is no remaining input.
 --
@@ -328,7 +328,7 @@ sepby =
 eof ::
   Parser ()
 eof =
-  error "todo"
+  error "todo91"
 
 -- | Write a parser that produces a characer that satisfies all of the given predicates.
 --
@@ -352,7 +352,7 @@ satisfyAll ::
   List (Char -> Bool)
   -> Parser Char
 satisfyAll =
-  error "todo"
+  error "todo92"
 
 -- | Write a parser that produces a characer that satisfies any of the given predicates.
 --
@@ -373,7 +373,7 @@ satisfyAny ::
   List (Char -> Bool)
   -> Parser Char
 satisfyAny =
-  error "todo"
+  error "todo93"
 
 -- | Write a parser that parses between the two given characters, separated by a comma character ','.
 --
@@ -402,4 +402,4 @@ betweenSepbyComma ::
   -> Parser a
   -> Parser (List a)
 betweenSepbyComma =
-  error "todo"
+  error "todo94"
