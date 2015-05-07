@@ -47,7 +47,8 @@ combinations xs = xs :. combinations (drop 1 xs)
 
 instance Extend List where
   (<<=) :: (List a -> b) -> List a -> List b
-  (<<=) f xs = undefined
+  (<<=) = undefined
+  {- (<<=) f xs = <$> xs -}
 
 -- | Implement the @Extend@ instance for @Optional@.
 --

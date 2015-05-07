@@ -86,66 +86,38 @@ type State' s a =
 --
 -- >>> runStateT (state' $ runState $ put 1) 0
 -- Id ((),1)
-state' ::
-  (s -> (a, s))
-  -> State' s a
-state' =
-  error "todo129"
+state' :: (s -> (a, s)) -> State' s a
+state' = error "todo129"
 
 -- | Provide an unwrapper for `State'` values.
 --
 -- >>> runState' (state' $ runState $ put 1) 0
 -- ((),1)
-runState' ::
-  State' s a
-  -> s
-  -> (a, s)
-runState' =
-  error "todo130"
+runState' :: State' s a -> s -> (a, s)
+runState' = error "todo130"
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting state.
-execT ::
-  Functor f =>
-  StateT s f a
-  -> s
-  -> f s
-execT =
-  error "todo131"
+execT :: Functor f => StateT s f a -> s -> f s
+execT = error "todo131"
 
 -- | Run the `State` seeded with `s` and retrieve the resulting state.
-exec' ::
-  State' s a
-  -> s
-  -> s
-exec' =
-  error "todo132"
+exec' :: State' s a -> s -> s
+exec' = error "todo132"
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting value.
-evalT ::
-  Functor f =>
-  StateT s f a
-  -> s
-  -> f a
-evalT =
-  error "todo133"
+evalT :: Functor f => StateT s f a -> s -> f a
+evalT = error "todo133"
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
-eval' ::
-  State' s a
-  -> s
-  -> a
-eval' =
-  error "todo134"
+eval' :: State' s a -> s -> a
+eval' = error "todo134"
 
 -- | A `StateT` where the state also distributes into the produced value.
 --
 -- >>> (runStateT (getT :: StateT Int List Int) 3)
 -- [(3,3)]
-getT ::
-  Monad f =>
-  StateT s f s
-getT =
-  error "todo135"
+getT :: Monad f => StateT s f s
+getT = error "todo135"
 
 -- | A `StateT` where the resulting state is seeded with the given value.
 --
@@ -154,24 +126,16 @@ getT =
 --
 -- >>> runStateT (putT 2 :: StateT Int List ()) 0
 -- [((),2)]
-putT ::
-  Monad f =>
-  s
-  -> StateT s f ()
-putT =
-  error "todo136"
+putT :: Monad f => s -> StateT s f ()
+putT = error "todo136"
 
 -- | Remove all duplicate elements in a `List`.
 --
 -- /Tip:/ Use `filtering` and `State'` with a @Data.Set#Set@.
 --
 -- prop> distinct' xs == distinct' (flatMap (\x -> x :. x :. Nil) xs)
-distinct' ::
-  (Ord a, Num a) =>
-  List a
-  -> List a
-distinct' =
-  error "todo137"
+distinct' :: (Ord a, Num a) => List a -> List a
+distinct' = error "todo137"
 
 -- | Remove all duplicate elements in a `List`.
 -- However, if you see a value greater than `100` in the list,
@@ -184,16 +148,11 @@ distinct' =
 --
 -- >>> distinctF $ listh [1,2,3,2,1,101]
 -- Empty
-distinctF ::
-  (Ord a, Num a) =>
-  List a
-  -> Optional (List a)
-distinctF =
-  error "todo138"
+distinctF :: (Ord a, Num a) => List a -> Optional (List a)
+distinctF = error "todo138"
 
 -- | An `OptionalT` is a functor of an `Optional` value.
-data OptionalT f a =
-  OptionalT {
+data OptionalT f a = OptionalT {
     runOptionalT ::
       f (Optional a)
   }
@@ -203,29 +162,25 @@ data OptionalT f a =
 -- >>> runOptionalT $ (+1) <$> OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Empty]
 instance Functor f => Functor (OptionalT f) where
-  (<$>) =
-    error "todo139"
+  (<$>) = error "todo139"
 
 -- | Implement the `Apply` instance for `OptionalT f` given a Apply f.
 --
 -- >>> runOptionalT $ OptionalT (Full (+1) :. Full (+2) :. Nil) <*> OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Empty,Full 3,Empty]
 instance Apply f => Apply (OptionalT f) where
-  (<*>) =
-    error "todo140"
+  (<*>) = error "todo140"
 
 -- | Implement the `Applicative` instance for `OptionalT f` given a Applicative f.
 instance Applicative f => Applicative (OptionalT f) where
-  pure =
-    error "todo141"
+  pure = error "todo141"
 
 -- | Implement the `Bind` instance for `OptionalT f` given a Monad f.
 --
 -- >>> runOptionalT $ (\a -> OptionalT (Full (a+1) :. Full (a+2) :. Nil)) =<< OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Full 3,Empty]
 instance Monad f => Bind (OptionalT f) where
-  (=<<) =
-    error "todo142"
+  (=<<) = error "todo142"
 
 instance Monad f => Monad (OptionalT f) where
 

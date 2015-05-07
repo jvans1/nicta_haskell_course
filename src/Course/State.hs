@@ -137,10 +137,20 @@ findM fn (x :. xs) = do
 --
 -- /Tip:/ Use `findM` and `State` with a @Data.Set#Set@.
 --
+-- newtype State s a = State { runState :: s -> (a, s) }
+--
 -- prop> case firstRepeat xs of Empty -> let xs' = hlist xs in nub xs' == xs'; Full x -> length (filter (== x) xs) > 1
 -- prop> case firstRepeat xs of Empty -> True; Full x -> let (l, (rx :. rs)) = span (/= x) xs in let (l2, r2) = span (/= x) rs in let l3 = hlist (l ++ (rx :. Nil) ++ l2) in nub l3 == l3
 firstRepeat :: Ord a => List a -> Optional a
-firstRepeat = error "todo123"
+firstRepeat xs = fst $ runState (findM isMember xs) S.empty where
+  isMember :: Ord b => b -> State (S.Set b) Bool
+  isMember opt = do 
+    set <- get
+    if S.member opt set then
+      return $ S.member opt set
+    else do 
+      State (\x -> (False, S.insert opt set))
+
 
 -- | Remove all duplicate elements in a `List`.
 -- /Tip:/ Use `filtering` and `State` with a @Data.Set#Set@.
@@ -148,12 +158,8 @@ firstRepeat = error "todo123"
 -- prop> firstRepeat (distinct xs) == Empty
 --
 -- prop> distinct xs == distinct (flatMap (\x -> x :. x :. Nil) xs)
-distinct ::
-  Ord a =>
-  List a
-  -> List a
-distinct =
-  error "todo124"
+distinct :: Ord a => List a -> List a
+distinct = error "todo124"
 
 -- | A happy number is a positive integer, where the sum of the square of its digits eventually reaches 1 after repetition.
 -- In contrast, a sad number (not a happy number) is where the sum of the square of its digits never reaches 1

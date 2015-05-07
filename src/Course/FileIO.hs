@@ -60,43 +60,30 @@ the contents of c
 -}
 
 -- /Tip:/ use @getArgs@ and @run@
-main ::
-  IO ()
-main =
-  error "todo24"
+main :: IO ()
+main = getLine >>= run
 
-type FilePath =
-  Chars
+
+type FilePath = Chars
 
 -- /Tip:/ Use @getFiles@ and @printFiles@.
-run ::
-  Chars
-  -> IO ()
-run =
-  error "todo25"
+run :: Chars -> IO ()
+run args = do 
+  contents <- readFile args
+  (getFiles $ lines contents) >>= printFiles
 
-getFiles ::
-  List FilePath
-  -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo26"
+getFiles :: List FilePath -> IO (List (FilePath, Chars))
+getFiles xs = sequence (map getFile xs) 
 
-getFile ::
-  FilePath
-  -> IO (FilePath, Chars)
-getFile =
-  error "todo27"
+getFile :: FilePath -> IO (FilePath, Chars)
+getFile fp = do 
+  contents <- readFile fp
+  return (fp, contents)
 
-printFiles ::
-  List (FilePath, Chars)
-  -> IO ()
-printFiles =
-  error "todo28"
+printFiles :: List (FilePath, Chars) -> IO ()
+printFiles xs = sequence (map (uncurry printFile) xs) >> return ()
 
-printFile ::
-  FilePath
-  -> Chars
-  -> IO ()
-printFile =
-  error "todo29"
-
+printFile :: FilePath -> Chars -> IO ()
+printFile path contents = do
+  putStrLn $ "======" ++ path
+  putStrLn contents
