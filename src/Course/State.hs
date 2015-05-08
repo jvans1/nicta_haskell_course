@@ -122,7 +122,6 @@ put seed = State (\_ -> ((), seed))
 --
 -- >>> let p x = (\s -> (const $ pure (x == 'i')) =<< put (1+s)) =<< get in runState (findM p $ listh ['a'..'h']) 0
 -- (Empty,8)
--- TODO: This feels sucky
 findM :: Monad f => (a -> f Bool) -> List a -> f (Optional a)
 findM _  Nil       = return Empty
 findM fn (x :. xs) = do 
@@ -131,13 +130,14 @@ findM fn (x :. xs) = do
             else findM fn xs
 
 
-
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
 --
 -- /Tip:/ Use `findM` and `State` with a @Data.Set#Set@.
 --
 -- newtype State s a = State { runState :: s -> (a, s) }
+-- findM :: Monad f => (a -> f Bool) -> List a -> f (Optional a)
+-- isMember :: Ord b => b -> State (S.Set b) Bool
 --
 -- prop> case firstRepeat xs of Empty -> let xs' = hlist xs in nub xs' == xs'; Full x -> length (filter (== x) xs) > 1
 -- prop> case firstRepeat xs of Empty -> True; Full x -> let (l, (rx :. rs)) = span (/= x) xs in let (l2, r2) = span (/= x) rs in let l3 = hlist (l ++ (rx :. Nil) ++ l2) in nub l3 == l3
@@ -159,7 +159,14 @@ firstRepeat xs = fst $ runState (findM isMember xs) S.empty where
 --
 -- prop> distinct xs == distinct (flatMap (\x -> x :. x :. Nil) xs)
 distinct :: Ord a => List a -> List a
-distinct = error "todo124"
+distinct xs= fst $ runState (filtering isDuplicate xs) S.empty where
+  {- isDuplicate :: Applicative f => a -> f Bool -}
+  isDuplicate val = do 
+    set <- get
+    if S.member val set  then
+      return True
+    else State (\x -> (False, S.insert val set))
+
 
 -- | A happy number is a positive integer, where the sum of the square of its digits eventually reaches 1 after repetition.
 -- In contrast, a sad number (not a happy number) is where the sum of the square of its digits never reaches 1
