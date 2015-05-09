@@ -159,7 +159,7 @@ firstRepeat xs = fst $ runState (findM isMember xs) S.empty where
 --
 -- prop> distinct xs == distinct (flatMap (\x -> x :. x :. Nil) xs)
 distinct :: Ord a => List a -> List a
-distinct xs= fst $ runState (filtering isDuplicate xs) S.empty where
+distinct xs = fst $ runState (filtering isDuplicate xs) S.empty where
   {- isDuplicate :: Applicative f => a -> f Bool -}
   isDuplicate val = do 
     set <- get
@@ -189,8 +189,30 @@ distinct xs= fst $ runState (filtering isDuplicate xs) S.empty where
 --
 -- >>> isHappy 44
 -- True
-isHappy ::
-  Integer
-  -> Bool
-isHappy =
-  error "todo125"
+isHappy :: Integer -> Bool
+isHappy i = (contains 1) . fst $ runState (findM stateHappy (sumAllSquares i)) Nil where
+    stateHappy :: Integer -> State (List Integer) Bool 
+    stateHappy i = do 
+      xs <- get
+      if i == 1 || elem i xs then
+        return True
+      else
+        State (\x -> (False, i :. xs))
+
+sumAllSquares :: Integer -> List Integer
+sumAllSquares = produce sumSquareOfDigits
+
+square :: Int -> Int
+square = join (*)
+
+sumSquareOfDigits :: Integer -> Integer
+sumSquareOfDigits i = P.toInteger . sum . (map square) $ digits (P.fromIntegral i)
+
+digits :: Int -> List Int
+digits = digitsFromInt Nil where
+  digitsFromInt :: List Int -> Int -> List Int
+  digitsFromInt xs int
+    | int == 0          = xs
+    | int `mod` 10 == 0 = digitsFromInt (0 :. xs) (int `div` 10)
+    | otherwise         = let digit = int `mod` 10 in 
+                              digitsFromInt (digit :. xs) ((int - digit) `div` 10)

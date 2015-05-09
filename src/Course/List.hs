@@ -356,12 +356,8 @@ dropWhile p xs@(x:.xs') =
     else
       xs
 
-takeWhile ::
-  (a -> Bool)
-  -> List a
-  -> List a
-takeWhile _ Nil =
-  Nil
+takeWhile :: (a -> Bool) -> List a -> List a
+takeWhile _ Nil = Nil
 takeWhile p (x:.xs) =
   if p x
     then
@@ -369,22 +365,12 @@ takeWhile p (x:.xs) =
     else
       Nil
 
-zip ::
-  List a
-  -> List b
-  -> List (a, b)
-zip =
-  zipWith (,)
+zip :: List a -> List b -> List (a, b)
+zip = zipWith (,)
 
-zipWith ::
-  (a -> b -> c)
-  -> List a
-  -> List b
-  -> List c
-zipWith f (a:.as) (b:.bs) =
-  f a b :. zipWith f as bs
-zipWith _ _  _ =
-  Nil
+zipWith :: (a -> b -> c) -> List a -> List b -> List c
+zipWith f (a:.as) (b:.bs) = f a b :. zipWith f as bs
+zipWith _ _  _ = Nil
 
 unfoldr ::
   (a -> Optional (b, a))
@@ -415,19 +401,11 @@ listOptional f (h:.t) =
        Empty -> r
        Full q -> q :. r
 
-any ::
-  (a -> Bool)
-  -> List a
-  -> Bool
-any p =
-  foldRight ((||) . p) False
+any :: (a -> Bool) -> List a -> Bool
+any p = foldRight ((||) . p) False
 
-all ::
-  (a -> Bool)
-  -> List a
-  -> Bool
-all p =
-  foldRight ((&&) . p) True
+all :: (a -> Bool) -> List a -> Bool
+all p = foldRight ((&&) . p) True
 
 or ::
   List Bool
