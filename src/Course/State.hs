@@ -35,7 +35,6 @@ instance Functor (State s) where
   (<$>) :: (a -> b) -> State s a -> State s b
   (<$>) f = State . newState . runState 
     where
-      {- newState :: (s -> (a,s)) -> s -> (a, s) -}
       newState sf s = let (val, s') = sf s in
                         (f val, s')
 
@@ -143,13 +142,14 @@ findM fn (x :. xs) = do
 -- prop> case firstRepeat xs of Empty -> True; Full x -> let (l, (rx :. rs)) = span (/= x) xs in let (l2, r2) = span (/= x) rs in let l3 = hlist (l ++ (rx :. Nil) ++ l2) in nub l3 == l3
 firstRepeat :: Ord a => List a -> Optional a
 firstRepeat xs = fst $ runState (findM isMember xs) S.empty where
-  isMember :: Ord b => b -> State (S.Set b) Bool
-  isMember opt = do 
-    set <- get
-    if S.member opt set then
-      return $ S.member opt set
-    else do 
-      State (\x -> (False, S.insert opt set))
+
+isMember :: Ord b => b -> State (S.Set b) Bool
+isMember opt = do 
+  set <- get
+  if S.member opt set then
+    return $ True
+  else do 
+    State (\x -> (False, S.insert opt set))
 
 
 -- | Remove all duplicate elements in a `List`.
@@ -159,14 +159,7 @@ firstRepeat xs = fst $ runState (findM isMember xs) S.empty where
 --
 -- prop> distinct xs == distinct (flatMap (\x -> x :. x :. Nil) xs)
 distinct :: Ord a => List a -> List a
-distinct xs = fst $ runState (filtering isDuplicate xs) S.empty where
-  {- isDuplicate :: Applicative f => a -> f Bool -}
-  isDuplicate val = do 
-    set <- get
-    if S.member val set  then
-      return True
-    else State (\x -> (False, S.insert val set))
-
+distinct xs = fst $ runState (filtering isMember xs) S.empty where
 
 -- | A happy number is a positive integer, where the sum of the square of its digits eventually reaches 1 after repetition.
 -- In contrast, a sad number (not a happy number) is where the sum of the square of its digits never reaches 1
@@ -209,10 +202,4 @@ sumSquareOfDigits :: Integer -> Integer
 sumSquareOfDigits i = P.toInteger . sum . (map square) $ digits (P.fromIntegral i)
 
 digits :: Int -> List Int
-digits = digitsFromInt Nil where
-  digitsFromInt :: List Int -> Int -> List Int
-  digitsFromInt xs int
-    | int == 0          = xs
-    | int `mod` 10 == 0 = digitsFromInt (0 :. xs) (int `div` 10)
-    | otherwise         = let digit = int `mod` 10 in 
-                              digitsFromInt (digit :. xs) ((int - digit) `div` 10)
+digits i = map digitToInt (show' i)

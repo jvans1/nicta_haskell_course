@@ -79,45 +79,45 @@ instance Monad f => Bind (StateT s f) where
 instance Monad f => Monad (StateT s f) where
 
 -- | A `State'` is `StateT` specialised to the `Id` functor.
-type State' s a =
-  StateT s Id a
+type State' s a = StateT s Id a
 
 -- | Provide a constructor for `State'` values
 --
 -- >>> runStateT (state' $ runState $ put 1) 0
 -- Id ((),1)
 state' :: (s -> (a, s)) -> State' s a
-state' = error "todo129"
+state' fn = StateT $ return <$> fn
 
 -- | Provide an unwrapper for `State'` values.
 --
 -- >>> runState' (state' $ runState $ put 1) 0
 -- ((),1)
 runState' :: State' s a -> s -> (a, s)
-runState' = error "todo130"
+runState' st = runId . (runStateT st)
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting state.
 execT :: Functor f => StateT s f a -> s -> f s
-execT = error "todo131"
+execT st seed = snd <$> runStateT st seed
 
 -- | Run the `State` seeded with `s` and retrieve the resulting state.
 exec' :: State' s a -> s -> s
-exec' = error "todo132"
+exec' st = runId . (execT st)
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting value.
 evalT :: Functor f => StateT s f a -> s -> f a
-evalT = error "todo133"
+evalT st seed = fst <$> runStateT st seed
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 eval' :: State' s a -> s -> a
-eval' = error "todo134"
+eval' st = runId . (evalT st)
 
 -- | A `StateT` where the state also distributes into the produced value.
 --
+-- newtype StateT s f a = StateT { runStateT :: s -> f (a, s) }
 -- >>> (runStateT (getT :: StateT Int List Int) 3)
 -- [(3,3)]
 getT :: Monad f => StateT s f s
-getT = error "todo135"
+getT = StateT (\s -> return (s, s))
 
 -- | A `StateT` where the resulting state is seeded with the given value.
 --
@@ -127,7 +127,7 @@ getT = error "todo135"
 -- >>> runStateT (putT 2 :: StateT Int List ()) 0
 -- [((),2)]
 putT :: Monad f => s -> StateT s f ()
-putT = error "todo136"
+putT s = StateT (\_ -> return ((), s) )
 
 -- | Remove all duplicate elements in a `List`.
 --
@@ -135,7 +135,16 @@ putT = error "todo136"
 --
 -- prop> distinct' xs == distinct' (flatMap (\x -> x :. x :. Nil) xs)
 distinct' :: (Ord a, Num a) => List a -> List a
-distinct' = error "todo137"
+distinct' xs = eval' (filtering isStateMember xs) S.empty where
+
+isStateMember ::(Ord b, Num b) => b -> State' (S.Set b) Bool
+-- Not workin [ya]
+{- isStateMember opt = do -}
+  {- set <- getT -}
+  {- if S.member opt set then -}
+    {- return True -}
+  {- else do  -}
+    {- StateT (\_ -> Id (False, S.insert opt set) ) -}
 
 -- | Remove all duplicate elements in a `List`.
 -- However, if you see a value greater than `100` in the list,
