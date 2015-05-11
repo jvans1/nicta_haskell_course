@@ -51,7 +51,5 @@ instance A.Applicative Optional where
     Full
 
 instance P.Monad Optional where
-  (>>=) =
-    flip bindOptional
-  return =
-    Full
+  (>>=) = flip bindOptional
+  return = Full

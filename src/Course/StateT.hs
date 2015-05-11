@@ -68,13 +68,13 @@ instance Monad f => Applicative (StateT s f) where
 -- | Implement the `Bind` instance for @StateT s f@ given a @Monad f@.
 --   Make sure the state value is passed through in `bind`.
 --
+-- newtype StateT s f a = StateT { runStateT :: s -> f (a, s) }
 -- >>> runStateT ((const $ putT 2) =<< putT 1) 0
 -- ((),2)
 instance Monad f => Bind (StateT s f) where
   (=<<) :: (a -> StateT s f b) -> StateT s f a -> StateT s f b
-  (=<<) = undefined
-  {- (=<<) fst st = StateT $ \state -> do  -}
-    {- runStateT st >>= (runStateT <$> fst) -}
+  (=<<) stfn st = StateT $ \state ->
+    (runStateT st state) >>= (\(x, y) -> (runStateT (stfn x) state))
 
 instance Monad f => Monad (StateT s f) where
 
@@ -138,13 +138,12 @@ distinct' :: (Ord a, Num a) => List a -> List a
 distinct' xs = eval' (filtering isStateMember xs) S.empty where
 
 isStateMember ::(Ord b, Num b) => b -> State' (S.Set b) Bool
--- Not workin [ya]
-{- isStateMember opt = do -}
-  {- set <- getT -}
-  {- if S.member opt set then -}
-    {- return True -}
-  {- else do  -}
-    {- StateT (\_ -> Id (False, S.insert opt set) ) -}
+isStateMember opt = do
+  set <- getT
+  if S.member opt set then
+    return False
+  else do 
+    StateT (\_ -> Id (True, S.insert opt set) )
 
 -- | Remove all duplicate elements in a `List`.
 -- However, if you see a value greater than `100` in the list,
@@ -155,15 +154,23 @@ isStateMember ::(Ord b, Num b) => b -> State' (S.Set b) Bool
 -- >>> distinctF $ listh [1,2,3,2,1]
 -- Full [1,2,3]
 --
+--
 -- >>> distinctF $ listh [1,2,3,2,1,101]
 -- Empty
+type StateOptional a b = StateT (S.Set a) Optional b
 distinctF :: (Ord a, Num a) => List a -> Optional (List a)
-distinctF = error "todo138"
+distinctF xs = evalT (filtering isOptionalMember xs) S.empty
+isOptionalMember :: (Ord b, Num b) =>  b -> StateOptional b Bool
+isOptionalMember val = do
+  set <- getT
+  if val > 100 then StateT (\_ -> Empty)
+               else StateT (\_ -> Full (not (S.member val set), S.insert val set))
+               -- newtype StateT s f a = StateT { runStateT :: s -> f (a, s) }
+--
 
 -- | An `OptionalT` is a functor of an `Optional` value.
 data OptionalT f a = OptionalT {
-    runOptionalT ::
-      f (Optional a)
+    runOptionalT :: f (Optional a)
   }
 
 -- | Implement the `Functor` instance for `OptionalT f` given a Functor f.
