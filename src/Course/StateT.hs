@@ -178,7 +178,7 @@ data OptionalT f a = OptionalT {
 -- >>> runOptionalT $ (+1) <$> OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Empty]
 instance Functor f => Functor (OptionalT f) where
-  (<$>) = error "todo139"
+  (<$>) f fa = error "toto"
 
 -- | Implement the `Apply` instance for `OptionalT f` given a Apply f.
 --
