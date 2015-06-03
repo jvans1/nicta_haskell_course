@@ -178,56 +178,54 @@ data OptionalT f a = OptionalT {
 -- >>> runOptionalT $ (+1) <$> OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Empty]
 instance Functor f => Functor (OptionalT f) where
-  (<$>) f fa = error "toto"
+  (<$>) f opt = OptionalT $ (\x -> f <$> x) <$> (runOptionalT opt)
 
 -- | Implement the `Apply` instance for `OptionalT f` given a Apply f.
---
 -- >>> runOptionalT $ OptionalT (Full (+1) :. Full (+2) :. Nil) <*> OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Empty,Full 3,Empty]
 instance Apply f => Apply (OptionalT f) where
-  (<*>) = error "todo140"
+  (<*>) ffn fa = OptionalT $ (\x y -> x <*> y) <$> (runOptionalT ffn) <*> (runOptionalT fa)
 
 -- | Implement the `Applicative` instance for `OptionalT f` given a Applicative f.
 instance Applicative f => Applicative (OptionalT f) where
-  pure = error "todo141"
+  pure v = OptionalT . pure $ pure v
 
 -- | Implement the `Bind` instance for `OptionalT f` given a Monad f.
 --
+--
+--  runOptionalT :: f (Optional a)
 -- >>> runOptionalT $ (\a -> OptionalT (Full (a+1) :. Full (a+2) :. Nil)) =<< OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Full 3,Empty]
 instance Monad f => Bind (OptionalT f) where
-  (=<<) = error "todo142"
+  (=<<) f ma = OptionalT $ runOptionalT ma >>= go  where
+    go (Full a) = runOptionalT $ f a
+    go Empty    = return Empty
 
 instance Monad f => Monad (OptionalT f) where
 
 -- | A `Logger` is a pair of a list of log values (`[l]`) and an arbitrary value (`a`).
-data Logger l a =
-  Logger (List l) a
-  deriving (Eq, Show)
+data Logger l a = Logger (List l) a deriving (Eq, Show)
 
 -- | Implement the `Functor` instance for `Logger
 --
 -- >>> (+3) <$> Logger (listh [1,2]) 3
 -- Logger [1,2] 6
 instance Functor (Logger l) where
-  (<$>) =
-    error "todo143"
+  (<$>) f (Logger xs a) = Logger xs (f a)
 
 -- | Implement the `Apply` instance for `Logger`.
 --
 -- >>> Logger (listh [1,2]) (+7) <*> Logger (listh [3,4]) 3
 -- Logger [1,2,3,4] 10
 instance Apply (Logger l) where
-  (<*>) =
-    error "todo144"
+  (<*>) (Logger xs1 f) (Logger xs2 a) = Logger (xs1 ++ xs2) (f a)
 
 -- | Implement the `Applicative` instance for `Logger`.
 --
 -- >>> pure "table" :: Logger Int P.String
 -- Logger [] "table"
 instance Applicative (Logger l) where
-  pure =
-    error "todo145"
+  pure = Logger Nil
 
 -- | Implement the `Bind` instance for `Logger`.
 -- The `bind` implementation must append log values to maintain associativity.
@@ -235,8 +233,7 @@ instance Applicative (Logger l) where
 -- >>> (\a -> Logger (listh [4,5]) (a+3)) =<< Logger (listh [1,2]) 3
 -- Logger [1,2,4,5] 6
 instance Bind (Logger l) where
-  (=<<) =
-    error "todo146"
+  (=<<) f (Logger xs i) = (Logger xs id) <*> f i
 
 instance Monad (Logger l) where
 
@@ -244,10 +241,7 @@ instance Monad (Logger l) where
 --
 -- >>> log1 1 2
 -- Logger [1] 2
-log1 ::
-  l
-  -> a
-  -> Logger l a
+log1 :: l -> a -> Logger l a
 log1 =
   error "todo148"
 
