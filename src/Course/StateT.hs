@@ -17,7 +17,6 @@ import Course.Bind
 import Course.Monad
 import Course.State
 import qualified Data.Set as S
-import qualified Prelude as P
 
 -- $setup
 -- >>> import Test.QuickCheck
@@ -242,8 +241,7 @@ instance Monad (Logger l) where
 -- >>> log1 1 2
 -- Logger [1] 2
 log1 :: l -> a -> Logger l a
-log1 =
-  error "todo148"
+log1 l a = Logger (l :. Nil) a
 
 -- | Remove all duplicate integers from a list. Produce a log as you go.
 -- If there is an element above 100, then abort the entire computation and produce no result.
@@ -253,15 +251,30 @@ log1 =
 -- Other numbers produce no log message.
 --
 -- /Tip:/ Use `filtering` and `StateT` over (`OptionalT` over `Logger` with a @Data.Set#Set@).
+-- newtype StateT s f a = StateT { runStateT :: s -> f (a, s) }
+-- data OptionalT f a = OptionalT { runOptionalT :: f (Optional a) }
+-- data Logger l a = Logger (List l) a deriving (Eq, Show)
+-- Logger [Chars] (Optional a, s)
 --
 -- >>> distinctG $ listh [1,2,3,2,6]
 -- Logger ["even number: 2","even number: 2","even number: 6"] (Full [1,2,3,6])
 --
 -- >>> distinctG $ listh [1,2,3,2,6,106]
 -- Logger ["even number: 2","even number: 2","even number: 6","aborting > 100: 106"] Empty
-distinctG ::
-  (Integral a, Show a) =>
-  List a
-  -> Logger Chars (Optional (List a))
-distinctG =
-  error "todo148"
+type OptionalLogger = OptionalT (Logger Chars)
+type IntSet = S.Set Int
+type StateOptionalLogger = StateT IntSet OptionalLogger
+
+runStateOptionalLogger = runOptionalT . (flip runStateT S.empty) 
+
+distinctG :: List Int -> Logger Chars (Optional (List Int))
+distinctG xs = (\x -> fst <$> x) <$> (runStateOptionalLogger $ filtering isDuplicate xs)
+
+isDuplicate ::  Int -> StateOptionalLogger Bool
+isDuplicate val = do 
+  members <- getT
+  if S.member val members 
+     then return False
+     else do 
+       putT $ S.insert val members
+       return True
