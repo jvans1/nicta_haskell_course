@@ -276,5 +276,6 @@ isDuplicate val = do
   if S.member val members 
      then return False
      else do 
+       StateT (\s -> OptionalT (log1 "Hello" (Full (Nil, S.empty)))) 
        putT $ S.insert val members
        return True
