@@ -270,12 +270,35 @@ runStateOptionalLogger = runOptionalT . (flip runStateT S.empty)
 distinctG :: List Int -> Logger Chars (Optional (List Int))
 distinctG xs = (\x -> fst <$> x) <$> (runStateOptionalLogger $ filtering isDuplicate xs)
 
+logT msg = liftState . liftOptional $ log1 msg (Nil, S.empty)
+
+liftState :: Bind m => m a -> StateT s m a
+liftState ma = StateT (\s -> (\x -> (x, s)) <$> ma )
+
+liftOptional :: Bind m => m a -> OptionalT m a
+liftOptional ma = OptionalT $ Full <$> ma
+
 isDuplicate ::  Int -> StateOptionalLogger Bool
-isDuplicate val = do 
-  members <- getT
-  if S.member val members 
-     then return False
-     else do 
-       StateT (\s -> OptionalT (log1 "Hello" (Full (Nil, S.empty)))) 
-       putT $ S.insert val members
-       return True
+isDuplicate val
+  | val > 100 = do 
+    let msg =  "aborting > 100: " ++ show' val
+    StateT (\s -> OptionalT (log1 msg Empty))
+  | val `mod` 2 == 0 = do 
+      members <- getT
+      if S.member val members 
+         then do 
+           logT $ "even number: " ++ show' val
+           return False
+         else do 
+           logT $ "even number: " ++ show' val
+           putT $ S.insert val members
+           return True
+  | otherwise = do 
+      members <- getT
+      if S.member val members 
+         then do 
+           return False
+         else do 
+           putT $ S.insert val members
+           return True
+
